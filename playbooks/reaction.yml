@@ -7,10 +7,11 @@
 - hosts: all
   remote_user: root
   gather_facts: true
+  connection: local
   vars:
     do_auth_token: "YOUR_DIGITALOCEAN_AUTH_TOKEN"
-    domain: "YOUR_DOMAIN"
-    email: "YOUR_EMAIL"
+    domain: "craflo.com"
+    email: "develop@craflo.com"
 
     create_user: reaction
     copy_local_key: "{{ lookup('file', lookup('env','HOME') + '/.ssh/id_rsa.pub') }}"
@@ -51,12 +52,6 @@
         create_home: true
         shell: /bin/bash
 
-    - name: Set authorized key for remote user
-      authorized_key:
-        user: "{{ create_user }}"
-        state: present
-        key: "{{ copy_local_key }}"
-
     - name: Disable password authentication for root
       lineinfile:
         path: /etc/ssh/sshd_config
@@ -64,38 +59,46 @@
         regexp: "^#?PermitRootLogin"
         line: "PermitRootLogin prohibit-password"
 
-    - name: Update apt
-      apt: update_cache=yes
-
-    - name: Install aptitude using apt
-      apt: name=aptitude state=latest update_cache=yes force_apt_get=yes
-
     - name: Install required system packages
-      apt: name={{ item }} state=latest update_cache=yes
-      loop:
-        [
-          "apt-transport-https",
-          "build-essential",
-          "ca-certificates",
-          "curl",
-          "git",
-          "libssl-dev",
-          "software-properties-common",
-          "vim",
-        ]
+      yum:
+        name: "{{ items }}"
+        state: latest
+      vars:
+        items:
+          - ca-certificates
+          - curl
+          - git
+          - openssl-devel
+          - vim
 
-    - name: Add Docker GPG apt Key
-      apt_key:
-        url: https://download.docker.com/linux/ubuntu/gpg
-        state: present
-        
-    - name: Add Docker Repository
-      apt_repository:
-        repo: deb https://download.docker.com/linux/ubuntu bionic stable
-        state: present
 
-    - name: Update apt and install docker-ce
-      apt: update_cache=yes name=docker-ce state=latest
+    - name: Install yum utils
+      yum:
+        name: yum-utils
+        state: latest
+
+    - name: Install device-mapper-persistent-data
+      yum:
+        name: device-mapper-persistent-data
+        state: latest
+
+    - name: Install lvm2
+      yum:
+        name: lvm2
+        state: latest
+
+    - name: Add Docker repo
+      get_url:
+        url: https://download.docker.com/linux/centos/docker-ce.repo
+        dest: /etc/yum.repos.d/docer-ce.repo
+      become: yes
+
+
+    - name: Add yarn Reposito
+      get_url:
+        url: https://dl.yarnpkg.com/rpm/yarn.repo
+        dest: /etc/yum.repos.d/yarn.repo
+
 
     - name: Ensure docker-compose is installed and available
       get_url:
@@ -103,57 +106,15 @@
         dest: /usr/local/bin/docker-compose
         mode: "u=rwx,g=rx,o=rx"
 
-    - name: Add Nodesource apt key.
-      apt_key:
-        url: https://keyserver.ubuntu.com/pks/lookup?op=get&fingerprint=on&search=0x1655A0AB68576280
-        id: "68576280"
-        state: present
-
-    - name: Add NodeSource repositories for Node.js.
-      apt_repository:
-        repo: "{{ item }}"
-        state: present
-      with_items:
-        - "deb https://deb.nodesource.com/node_{{ nodejs_version }} {{ ansible_distribution_release }} main"
-        - "deb-src https://deb.nodesource.com/node_{{ nodejs_version }} {{ ansible_distribution_release }} main"
-      register: node_repo
-
-    - name: Update apt cache if repo was added.
-      apt: update_cache=yes
-      when: node_repo.changed
-      tags: ["skip_ansible_lint"]
-
-    - name: Ensure Node.js and npm are installed.
-      apt: "name=nodejs={{ nodejs_version|regex_replace('x', '') }}* state=present"
-
-    - name: "Yarn | GPG"
-      apt_key:
-        url: https://dl.yarnpkg.com/debian/pubkey.gpg
-        state: present
-
-    - name: "Yarn | Ensure Debian sources list file exists"
-      file:
-        path: /etc/apt/sources.list.d/yarn.list
-        owner: root
-        mode: "0644"
-        state: touch
-
-    - name: "Yarn | Ensure Debian package is in sources list"
-      lineinfile:
-        dest: /etc/apt/sources.list.d/yarn.list
-        regexp: "deb http://dl.yarnpkg.com/debian/ stable main"
-        line: "deb http://dl.yarnpkg.com/debian/ stable main"
-        state: present
-
-    - name: "Yarn | Update APT cache"
-      apt:
-        update_cache: yes
+    - name: install node
+      shell: "curl -sL https://rpm.nodesource.com/setup_10.x | sudo bash -"
 
     - name: "Install Yarn"
-      apt:
-        name: yarn
+      yum:
+        name:
+        - nodejs
+        - yarn
         state: present
-        install_recommends: no
 
     - git:
         repo: "https://github.com/reactioncommerce/reaction-development-platform.git"
