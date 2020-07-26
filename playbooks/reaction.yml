@@ -273,11 +273,11 @@
           }
         - {
             variable: "OAUTH2_AUTH_URL",
-            value: "https://hydra.{{ domain }}/oauth2/auth",
+            value: "https://access.{{ domain }}/oauth2/auth",
           }
         - {
             variable: "OAUTH2_IDP_HOST_URL",
-            value: "https://identity.{{ domain }}",
+            value: "https://accounts.{{ domain }}",
           }
         - {
             variable: "OAUTH2_REDIRECT_URL",
@@ -285,15 +285,15 @@
           }
         - {
             variable: "OAUTH2_TOKEN_URL",
-            value: "https://hydra.{{ domain }}/oauth2/token",
+            value: "https://access.{{ domain }}/oauth2/token",
           }
         - {
             variable: "OAUTH2_PUBLIC_LOGOUT_URL",
-            value: "https://hydra.{{ domain }}/oauth2/sessions/logout",
+            value: "https://access.{{ domain }}/oauth2/sessions/logout",
           }
         - {
             variable: "OAUTH2_IDP_PUBLIC_CHANGE_PASSWORD_URL",
-            value: "https://identity.{{ domain }}/account/change-password?email=EMAIL&from=FROM",
+            value: "https://accounts.{{ domain }}/account/change-password?email=EMAIL&from=FROM",
           }
 
     - name: "Set Hydra's environment variables"
@@ -304,27 +304,27 @@
       loop:
         - {
             variable: "URLS_CONSENT",
-            value: "https://identity.{{ domain }}/consent",
+            value: "https://accounts.{{ domain }}/consent",
           }
         - {
             variable: "URLS_SELF_ISSUER",
-            value: "https://hydra.{{ domain }}"
+            value: "https://access.{{ domain }}"
           }
         - {
             variable: "URLS_LOGIN",
-            value: "https://identity.{{ domain }}/login",
+            value: "https://accounts.{{ domain }}/login",
           }
         - {
             variable: "URLS_ERROR",
-            value: "https://identity.{{ domain }}/account/oauth-error",
+            value: "https://accounts.{{ domain }}/account/oauth-error",
           }
         - {
             variable: "URLS_LOGOUT",
-            value: "https://identity.{{ domain }}/logout",
+            value: "https://accounts.{{ domain }}/logout",
           }
         - {
             variable: "SERVE_PUBLIC_CORS_ALLOWED_ORIGINS",
-            value: "https://admin.{{ domain }}",
+            value: "https://manage.{{ domain }}",
           }
 
     - name: "Set the Reaction identity service environment variables"
@@ -335,7 +335,7 @@
       loop:
         - {
             variable: "ROOT_URL",
-            value: "https://identity.{{ domain }}",
+            value: "https://accounts.{{ domain }}",
           }
         - {
             variable: "API_URL",
@@ -343,7 +343,7 @@
           }
         - {
             variable: "HYDRA_TOKEN_URL",
-            value: "https://hydra.{{ domain }}/oauth2/token"
+            value: "https://access.{{ domain }}/oauth2/token"
           }
         - {
             variable: "OAUTH2_CLIENT_DOMAINS",
@@ -358,7 +358,7 @@
       loop:
         - {
             variable: "ROOT_URL",
-            value: "https://admin.{{ domain }}",
+            value: "https://manage.{{ domain }}",
           }
         - {
             variable: "PUBLIC_STOREFRONT_HOME_URL",
@@ -382,11 +382,11 @@
           }
         - {
             variable: "OAUTH2_PUBLIC_URL",
-            value: "https://hydra.{{ domain }}"
+            value: "https://access.{{ domain }}"
           }
         - {
             variable: "OAUTH2_IDP_PUBLIC_CHANGE_PASSWORD_URL",
-            value: "https://identity.{{ domain }}/account/change-password?email=EMAIL&from=FROM"
+            value: "https://accounts.{{ domain }}/account/change-password?email=EMAIL&from=FROM"
           }
 
     - name: "Remove all Reaction Platform containers"
