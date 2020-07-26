@@ -63,9 +63,9 @@ This guide will use the following sub-domains, where `example.com` will need to 
 | ---------------------- | ------------------------------------- |
 | api.example.com        | The Reaction  GraphQL API             |
 | storefront.example.com | The example storefront                |
-| admin.example.com      | The Reaction admin interface          |
-| hydra.example.com      | Hydra OAuth 2.0 server                |
-| identity.example.com   | The Reaction Identity service         |
+| manage.example.com      | The Reaction admin interface          |
+| access.example.com      | Hydra OAuth 2.0 server                |
+| accounts.example.com   | The Reaction Identity service         |
 | traefik.example.com    | Traefik's admin UI                    |
 
 Each of your domains will need an `A` DNS record that resolves to your host's IP. It's recommend to use DigitalOcean's free [DNS manager](https://www.digitalocean.com/docs/networking/dns/overview/). Further, in order to obtain SSL certificates for your sub-domains, you will need a DNS manager that supports [CAA](https://support.dnsimple.com/articles/caa-record/) records.
@@ -177,7 +177,7 @@ At this point the Reaction GraphQL API, Example Storefront, Reaction Admin, Reac
 
 To create the primary shop login into the Reaction Admin at the following URL, first substitute the `example.com` with your actual domain:
 ```
-https://admin.example.com
+https://manage.example.com
 ```
 
 Upon navigating to the Reaction Admin interface, you will be presented with a login form, it will be necessary to create a user first, so click on the "Register" link and fill out the form. Once logged in, proceed to create a shop in the admin interface.
