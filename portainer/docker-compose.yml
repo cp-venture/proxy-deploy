@@ -22,9 +22,9 @@ services:
     labels:
       - "traefik.backend=portainer"
       - "traefik.port=9000"
-      - "traefik.frontend.rule=Host:portainer.example.com"
+      - "traefik.frontend.rule=Host:health.example.com"
     #Automatically choose 'Manage the Docker instance where Portainer is running' by adding <--host=unix:///var/run/docker.sock> to the command
-    command: --templates http://templates/templates.json
+    #command: --templates https://craflo.com/templates.json
     networks:
       - web
       - internal
