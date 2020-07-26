@@ -116,6 +116,12 @@
         - yarn
         state: present
 
+    - name: Clean the previous reaction deployment
+      command: "sudo rm -rf {{reaction_dir}} {{proxy_dir}}"
+      args:
+        warn: false
+        chdir: /home/{{ create_user }}
+
     - git:
         repo: "https://github.com/reactioncommerce/reaction-development-platform.git"
         dest: /home/{{ create_user }}/{{reaction_dir}}
@@ -160,9 +166,11 @@
 
     - name: Create Docker network named web
       command: docker network create web
+      ignore_errors: yes
 
     - name: Create Docker network named internal
       command: docker network create internal
+      ignore_errors: yes
 
     - name: "Set DO Auth Token in Traefik's docker-compose.yml"
       replace:
