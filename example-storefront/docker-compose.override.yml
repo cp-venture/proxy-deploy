@@ -5,7 +5,7 @@ networks:
     external:
       name: web
 services:
-  storefront:
+  web:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.storefront.entrypoints=http"
